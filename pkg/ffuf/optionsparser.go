@@ -374,7 +374,6 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	}
 
 	//Prepare headers and make canonical
-	fmt.Println(parseOpts.HTTP.Headers)
 	for _, v := range parseOpts.HTTP.Headers {
 		hs := strings.SplitN(v, ":", 2)
 		if len(hs) == 2 {
