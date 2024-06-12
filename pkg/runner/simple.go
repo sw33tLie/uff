@@ -147,7 +147,7 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 
 	for k, v := range req.Headers {
 		// Ensure no extra spaces in User-Agent header
-		httpreq.Header.Set(k, strings.TrimPrefix(v, " "))
+		httpreq.Header.Set(k, v)
 	}
 
 	if len(r.config.OutputDirectory) > 0 {
