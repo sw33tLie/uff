@@ -22,6 +22,21 @@ Host: example.com
 
 ```
 
+### No header canonization
+
+```http
+GET /hi HTTP/1.1
+Host: t93lmkg4rn3bdmoq9ujd9acr8ie94xvlk.oastify.com
+User-Agent: Fuzz Faster U Fool v2.1.0 sw33tlie unleashed-dev
+lowercase-header: wexxxh
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+
+```
+
+Note how `lowercase-header` starts with a lowercase `l`.
+
 ## Version
 
 Currently based on ffuf 2.10-dev
