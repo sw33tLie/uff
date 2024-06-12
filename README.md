@@ -22,4 +22,14 @@ Host: example.com
 
 ```
 
-Currently based on ffuf 2.10
+## Version
+
+Currently based on ffuf 2.10-dev
+
+## Installation
+
+To install `uff`, run the following command:
+
+```bash
+go install github.com/sw33tLie/uff@latest
+```
