@@ -379,7 +379,6 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 		if len(hs) == 2 {
 			// SWEETFREEDOM, removed all trimming and canonization
 			conf.Headers[hs[0]] = hs[1]
-
 		} else {
 			errs.Add(fmt.Errorf("Header defined by -H needs to have a value. \":\" should be used as a separator"))
 		}
