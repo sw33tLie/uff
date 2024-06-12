@@ -9,7 +9,7 @@ require (
 	github.com/ffuf/pencode v0.0.0-20240120104927-07e33ef17d5a
 	github.com/pelletier/go-toml v1.9.5
 	github.com/sw33tLie/neturl v0.0.0-20240612122703-b61e29214b2b
-	github.com/sw33tLie/oohttp v0.0.0-20240612134055-903b3d84803e
+	github.com/sw33tLie/oohttp v0.0.0-20240612152135-5aeb3b3d6240
 )
 
 require (
