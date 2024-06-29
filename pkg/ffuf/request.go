@@ -9,6 +9,7 @@ type Request struct {
 	Method   string
 	Host     string
 	Url      string
+	Opaque   string
 	Headers  map[string]string
 	Data     []byte
 	Input    map[string][]byte
@@ -20,6 +21,7 @@ func NewRequest(conf *Config) Request {
 	var req Request
 	req.Method = conf.Method
 	req.Url = conf.Url
+	req.Opaque = conf.Opaque
 	req.Headers = make(map[string]string)
 	return req
 }
@@ -45,6 +47,7 @@ func CopyRequest(basereq *Request) Request {
 	req.Method = basereq.Method
 	req.Host = basereq.Host
 	req.Url = basereq.Url
+	req.Opaque = basereq.Opaque
 
 	req.Headers = make(map[string]string, len(basereq.Headers))
 	for h, v := range basereq.Headers {
@@ -93,6 +96,20 @@ func SniperRequests(basereq *Request, template string) []Request {
 			for i := 0; i < len(tokens); i = i + 2 {
 				newreq := CopyRequest(basereq)
 				newreq.Url = injectKeyword(basereq.Url, keyword, tokens[i], tokens[i+1])
+
+				scrubTemplates(&newreq, template)
+				reqs = append(reqs, newreq)
+			}
+		}
+	}
+
+	if c := strings.Count(basereq.Opaque, template); c > 0 {
+		if c%2 == 0 {
+			tokens := templateLocations(template, basereq.Opaque)
+
+			for i := 0; i < len(tokens); i = i + 2 {
+				newreq := CopyRequest(basereq)
+				newreq.Opaque = injectKeyword(basereq.Opaque, keyword, tokens[i], tokens[i+1])
 				scrubTemplates(&newreq, template)
 				reqs = append(reqs, newreq)
 			}
@@ -184,6 +201,7 @@ func injectKeyword(input string, keyword string, startOffset int, endOffset int)
 func scrubTemplates(req *Request, template string) {
 	req.Method = strings.Join(strings.Split(req.Method, template), "")
 	req.Url = strings.Join(strings.Split(req.Url, template), "")
+	req.Opaque = strings.Join(strings.Split(req.Opaque, template), "")
 	req.Data = []byte(strings.Join(strings.Split(string(req.Data), template), ""))
 
 	for k, v := range req.Headers {

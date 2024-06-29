@@ -91,12 +91,12 @@ func (r *SimpleRunner) Prepare(input map[string][]byte, basereq *ffuf.Request) (
 		req.Method = strings.ReplaceAll(req.Method, keyword, string(inputitem))
 		headers := make(map[string]string, len(req.Headers))
 		for h, v := range req.Headers {
-			// SWEETFREEDOM
 			var CanonicalHeader string = strings.ReplaceAll(h, keyword, string(inputitem))
 			headers[CanonicalHeader] = strings.ReplaceAll(v, keyword, string(inputitem))
 		}
 		req.Headers = headers
 		req.Url = strings.ReplaceAll(req.Url, keyword, string(inputitem))
+		req.Opaque = strings.ReplaceAll(req.Opaque, keyword, string(inputitem))
 		req.Data = []byte(strings.ReplaceAll(string(req.Data), keyword, string(inputitem)))
 	}
 
@@ -143,6 +143,10 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 
 	if r.config.Raw {
 		httpreq.URL.Opaque = req.Url
+	}
+
+	if req.Opaque != "" {
+		httpreq.URL.Opaque = req.Opaque
 	}
 
 	for k, v := range req.Headers {

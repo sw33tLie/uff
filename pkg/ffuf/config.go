@@ -62,6 +62,7 @@ type Config struct {
 	Threads                   int                   `json:"threads"`
 	Timeout                   int                   `json:"timeout"`
 	Url                       string                `json:"url"`
+	Opaque                    string                `json:"opaque"`
 	Verbose                   bool                  `json:"verbose"`
 	Wordlists                 []string              `json:"wordlists"`
 	Http2                     bool                  `json:"http2"`
@@ -123,6 +124,7 @@ func NewConfig(ctx context.Context, cancel context.CancelFunc) Config {
 	conf.StopOnErrors = false
 	conf.Timeout = 10
 	conf.Url = ""
+	conf.Opaque = ""
 	conf.Verbose = false
 	conf.Wordlists = []string{}
 	conf.Http2 = false

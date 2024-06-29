@@ -41,6 +41,7 @@ type HTTPOptions struct {
 	SNI               string   `json:"sni"`
 	Timeout           int      `json:"timeout"`
 	URL               string   `json:"url"`
+	Opaque            string   `json:"opaque"`
 	Http2             bool     `json:"http2"`
 	ClientCert        string   `json:"client-cert"`
 	ClientKey         string   `json:"client-key"`
@@ -157,6 +158,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.HTTP.Timeout = 10
 	c.HTTP.SNI = ""
 	c.HTTP.URL = ""
+	c.HTTP.Opaque = ""
 	c.HTTP.Http2 = false
 	c.Input.DirSearchCompat = false
 	c.Input.Encoders = []string{}
@@ -358,6 +360,11 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	//Prepare URL
 	if parseOpts.HTTP.URL != "" {
 		conf.Url = parseOpts.HTTP.URL
+	}
+
+	//Prepare Opaque
+	if parseOpts.HTTP.Opaque != "" {
+		conf.Opaque = parseOpts.HTTP.Opaque
 	}
 
 	// Prepare SNI
@@ -563,14 +570,14 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	for _, provider := range conf.InputProviders {
 		if provider.Template != "" {
 			if !templatePresent(provider.Template, &conf) {
-				errmsg := fmt.Sprintf("Template %s defined, but not found in pairs in headers, method, URL or POST data.", provider.Template)
+				errmsg := fmt.Sprintf("Template %s defined, but not found in pairs in headers, method, URL, Opaque, or POST data.", provider.Template)
 				errs.Add(fmt.Errorf(errmsg))
 			} else {
 				newInputProviders = append(newInputProviders, provider)
 			}
 		} else {
 			if !keywordPresent(provider.Keyword, &conf) {
-				errmsg := fmt.Sprintf("Keyword %s defined, but not found in headers, method, URL or POST data.", provider.Keyword)
+				errmsg := fmt.Sprintf("Keyword %s defined, but not found in headers, method, URL, Opaque, or POST data.", provider.Keyword)
 				_, _ = fmt.Fprintf(os.Stderr, "%s\n", fmt.Errorf(errmsg))
 			} else {
 				newInputProviders = append(newInputProviders, provider)
@@ -682,6 +689,9 @@ func keywordPresent(keyword string, conf *Config) bool {
 	if strings.Contains(conf.Url, keyword) {
 		return true
 	}
+	if strings.Contains(conf.Opaque, keyword) {
+		return true
+	}
 	if strings.Contains(conf.Data, keyword) {
 		return true
 	}
@@ -707,6 +717,12 @@ func templatePresent(template string, conf *Config) bool {
 		sane = true
 	}
 	if c := strings.Count(conf.Url, template); c > 0 {
+		if c%2 != 0 {
+			return false
+		}
+		sane = true
+	}
+	if c := strings.Count(conf.Opaque, template); c > 0 {
 		if c%2 != 0 {
 			return false
 		}

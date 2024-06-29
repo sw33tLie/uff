@@ -26,6 +26,7 @@ func (c *Config) ToOptions() ConfigOptions {
 	o.HTTP.SNI = c.SNI
 	o.HTTP.Timeout = c.Timeout
 	o.HTTP.URL = c.Url
+	o.HTTP.Opaque = c.Opaque
 	o.HTTP.Http2 = c.Http2
 
 	o.General.AutoCalibration = c.AutoCalibration

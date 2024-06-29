@@ -169,11 +169,13 @@ func (j *Job) jobsInQueue() bool {
 
 func (j *Job) prepareQueueJob() {
 	j.Config.Url = j.queuejobs[j.queuepos].Url
+	j.Config.Opaque = j.queuejobs[j.queuepos].req.Opaque
 	j.currentDepth = j.queuejobs[j.queuepos].depth
 
 	//Find all keywords present in new queued job
 	kws := j.Input.Keywords()
 	found_kws := make([]string, 0)
+
 	for _, k := range kws {
 		if RequestContainsKeyword(j.queuejobs[j.queuepos].req, k) {
 			found_kws = append(found_kws, k)
@@ -259,6 +261,7 @@ func (j *Job) startExecution() {
 		nextInput := j.Input.Value()
 		nextPosition := j.Input.Position()
 		// Add FFUFHASH and its value
+
 		nextInput["FFUFHASH"] = j.ffufHash(nextPosition)
 
 		wg.Add(1)
@@ -396,6 +399,7 @@ func (j *Job) runTask(input map[string][]byte, position int, retried bool) {
 	basereq := j.queuejobs[j.queuepos-1].req
 	req, err := j.Runner.Prepare(input, &basereq)
 	req.Position = position
+
 	if err != nil {
 		j.Output.Error(fmt.Sprintf("Encountered an error while preparing request: %s\n", err))
 		j.incError()

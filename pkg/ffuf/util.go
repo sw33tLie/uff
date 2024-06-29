@@ -55,6 +55,9 @@ func RequestContainsKeyword(req Request, kw string) bool {
 	if strings.Contains(req.Url, kw) {
 		return true
 	}
+	if strings.Contains(req.Opaque, kw) {
+		return true
+	}
 	if strings.Contains(req.Method, kw) {
 		return true
 	}
