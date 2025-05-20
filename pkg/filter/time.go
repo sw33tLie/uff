@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ffuf/ffuf/v2/pkg/ffuf"
+	"github.com/sw33tLie/uff/v2/pkg/ffuf"
 )
 
 type TimeFilter struct {

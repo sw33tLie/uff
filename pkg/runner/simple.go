@@ -18,7 +18,7 @@ import (
 
 	http "github.com/sw33tLie/http"
 
-	"github.com/ffuf/ffuf/v2/pkg/ffuf"
+	"github.com/sw33tLie/uff/v2/pkg/ffuf"
 
 	"github.com/andybalholm/brotli"
 )

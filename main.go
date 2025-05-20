@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ffuf/ffuf/v2/pkg/ffuf"
-	"github.com/ffuf/ffuf/v2/pkg/filter"
-	"github.com/ffuf/ffuf/v2/pkg/input"
-	"github.com/ffuf/ffuf/v2/pkg/interactive"
-	"github.com/ffuf/ffuf/v2/pkg/output"
-	"github.com/ffuf/ffuf/v2/pkg/runner"
-	"github.com/ffuf/ffuf/v2/pkg/scraper"
+	"github.com/sw33tLie/uff/v2/pkg/ffuf"
+	"github.com/sw33tLie/uff/v2/pkg/filter"
+	"github.com/sw33tLie/uff/v2/pkg/input"
+	"github.com/sw33tLie/uff/v2/pkg/interactive"
+	"github.com/sw33tLie/uff/v2/pkg/output"
+	"github.com/sw33tLie/uff/v2/pkg/runner"
+	"github.com/sw33tLie/uff/v2/pkg/scraper"
 )
 
 type multiStringFlag []string

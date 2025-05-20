@@ -1,4 +1,4 @@
-module github.com/ffuf/ffuf/v2
+module github.com/sw33tLie/uff/v2
 
 go 1.23.5
 

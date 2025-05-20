@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ffuf/ffuf/v2/pkg/ffuf"
+	"github.com/sw33tLie/uff/v2/pkg/ffuf"
 )
 
 type UsageSection struct {
@@ -147,5 +147,5 @@ func Usage() {
 	fmt.Printf("  Fuzz multiple locations. Match only responses reflecting the value of \"VAL\" keyword. Colored.\n")
 	fmt.Printf("    ffuf -w params.txt:PARAM -w values.txt:VAL -u https://example.org/?PARAM=VAL -mr \"VAL\" -c\n\n")
 
-	fmt.Printf("  More information and examples: https://github.com/ffuf/ffuf\n\n")
+	fmt.Printf("  More information and examples: https://github.com/sw33tLie/uff\n\n")
 }

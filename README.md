@@ -1,6 +1,6 @@
 # uff - unleashed ffuf fork
 
-Custom [ffuf](https://github.com/ffuf/ffuf) fork that relies on modified net/http and net/url libraries to avoid strict header and URL parsing.
+Custom [ffuf](https://github.com/sw33tLie/uff) fork that relies on modified net/http and net/url libraries to avoid strict header and URL parsing.
 
 ## Installation
 
