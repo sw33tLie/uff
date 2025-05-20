@@ -109,6 +109,7 @@ Note you can use the {HOST} label inside the HTTP method to automatically replac
 
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
 - New flag: `-no-content-length` to send a body in a request even without a `Content-Length` header.
+- Default Threads increased to 200.
 
 ## Version
 

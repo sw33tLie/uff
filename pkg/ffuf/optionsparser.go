@@ -148,7 +148,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.General.StopOn403 = false
 	c.General.StopOnAll = false
 	c.General.StopOnErrors = false
-	c.General.Threads = 40
+	c.General.Threads = 200
 	c.General.Verbose = false
 	c.HTTP.Data = ""
 	c.HTTP.FollowRedirects = false
