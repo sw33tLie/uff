@@ -92,7 +92,7 @@ echo "hi" | go run *.go  -u "http://pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com
 Received request:
 
 ```
-GET /hi HTTP/0.1
+GET /hi HTTP/0.9
 Host: pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com
  look im just a raw request lol 
    so raw
