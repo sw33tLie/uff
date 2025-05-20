@@ -86,7 +86,7 @@ But WAIT, there's more!
 ## Full raw request fuzzing with ffuf
 
 ```
-echo "hi" | go run *.go  -u "http://pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com/" -w -  -c  -X $'GET /FUZZ HTTP/0.9\r\nHost: {HOST}\r\n look im just a raw request lol \r\n   so raw\r\n\r\n' --method-as-raw-request
+echo "hi" | go run *.go  -u "http://pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com/" --method-as-raw-request -w -  -c  -X $'GET /FUZZ HTTP/0.9\r\nHost: {HOST}\r\n look im just a raw request lol \r\n   so raw\r\n\r\n' 
 ```
 
 Received request:
@@ -100,7 +100,8 @@ Host: pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com
 
 ```
 
-Note this allows REAL control when fuzzing an http request, just like you can do with Burp Suite or Caido.
+The `--method-as-raw-request` makes the net/http lib only write the HTTP method in its requests.
+By putting the whole raw request in the HTTP method, we achieve REAL raw-request fuzzing, just like you can do with Burp Suite or Caido.
 
 ## Other customizations
 
