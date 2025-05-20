@@ -1,16 +1,15 @@
 package ffuf
 
 import (
-	"bufio"
 	"context"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
 
+	"github.com/sw33tLie/http"
 	url "github.com/sw33tLie/neturl"
 
 	"github.com/pelletier/go-toml"
@@ -198,8 +197,8 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 
 	var err error
 	var err2 error
-	if len(parseOpts.HTTP.URL) == 0 && parseOpts.Input.Request == "" {
-		errs.Add(fmt.Errorf("-u flag or -request flag is required"))
+	if len(parseOpts.HTTP.URL) == 0 {
+		errs.Add(fmt.Errorf("-u flag is required"))
 	}
 
 	// prepare extensions
@@ -619,8 +618,11 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	return &conf, errs.ErrorOrNil()
 }
 
+// sw33tLie patch
 func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
-	conf.RequestFile = parseOpts.Input.Request
+	http.EnableMethodOnlyRequest()
+
+	// conf.RequestFile = parseOpts.Input.Request
 	conf.RequestProto = parseOpts.Input.RequestProto
 	file, err := os.Open(parseOpts.Input.Request)
 	if err != nil {
@@ -628,67 +630,19 @@ func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 	}
 	defer file.Close()
 
-	r := bufio.NewReader(file)
-
-	s, err := r.ReadString('\n')
+	// Read the entire file content into the Method field
+	content, err := os.ReadFile(parseOpts.Input.Request)
 	if err != nil {
-		return fmt.Errorf("could not read request: %s", err)
-	}
-	parts := strings.Split(s, " ")
-	if len(parts) < 3 {
-		return fmt.Errorf("malformed request supplied")
-	}
-	// Set the request Method
-	conf.Method = parts[0]
-
-	for {
-		line, err := r.ReadString('\n')
-		line = strings.TrimSpace(line)
-
-		if err != nil || line == "" {
-			break
-		}
-
-		p := strings.SplitN(line, ":", 2)
-		if len(p) != 2 {
-			continue
-		}
-
-		if strings.EqualFold(p[0], "content-length") {
-			continue
-		}
-
-		conf.Headers[strings.TrimSpace(p[0])] = strings.TrimSpace(p[1])
+		return fmt.Errorf("could not read request file: %s", err)
 	}
 
-	// Handle case with the full http url in path. In that case,
-	// ignore any host header that we encounter and use the path as request URL
-	if strings.HasPrefix(parts[1], "http") {
-		parsed, err := url.Parse(parts[1])
-		if err != nil {
-			return fmt.Errorf("could not parse request URL: %s", err)
-		}
-		conf.Url = parts[1]
-		conf.Headers["Host"] = parsed.Host
-	} else {
-		// Build the request URL from the request
-		conf.Url = parseOpts.Input.RequestProto + "://" + conf.Headers["Host"] + parts[1]
+	if len(content) == 0 {
+		return fmt.Errorf("empty request file")
 	}
 
-	// Set the request body
-	b, err := io.ReadAll(r)
-	if err != nil {
-		return fmt.Errorf("could not read request body: %s", err)
-	}
-	conf.Data = string(b)
+	// Put the whole raw request in the method field
+	conf.Method = string(content)
 
-	// Remove newline (typically added by the editor) at the end of the file
-	//nolint:gosimple // we specifically want to remove just a single newline, not all of them
-	if strings.HasSuffix(conf.Data, "\r\n") {
-		conf.Data = conf.Data[:len(conf.Data)-2]
-	} else if strings.HasSuffix(conf.Data, "\n") {
-		conf.Data = conf.Data[:len(conf.Data)-1]
-	}
 	return nil
 }
 

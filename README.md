@@ -110,6 +110,7 @@ Note you can use the {HOST} label inside the HTTP method to automatically replac
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
 - New flag: `-no-content-length` to send a body in a request even without a `Content-Length` header.
 - Default Threads increased to 200.
+- The `-request` flag actually now sends what you had in your file as it is, instead of doing weird header reordering and not really sending what you wanted anyways. Note: Due to this, now it's mandatory to specify the -u URL flag, unlike in regular ffuf.
 
 ## Version
 
