@@ -103,6 +103,8 @@ Host: pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com
 The `--method-as-raw-request` makes the net/http lib only write the HTTP method in its requests.
 By putting the whole raw request in the HTTP method, we achieve REAL raw-request fuzzing, just like you can do with Burp Suite or Caido.
 
+Note you can use the {HOST} label inside the HTTP method to automatically replace it with the actual Host header of a request.
+
 ## Other customizations
 
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
