@@ -61,6 +61,7 @@ Note how `lowercase-header` starts with a lowercase `l`.
 
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
 - New flag: `-no-content-length` to send a body in a request even without a `Content-Length` header.
+- Removed all sanity checks on the HTTP method. You can even put space characters and newlines in it!
 
 ## Version
 
