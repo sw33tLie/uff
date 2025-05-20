@@ -25,32 +25,6 @@ Host: example.com
 
 Absolute URI fuzzing is often valuable, but not supported in regular ffuf.
 
-### Arbitrary HTTP method:
-
-`echo hi | uff -c -u http://example.com/FUZZ -w - -X ASDASD`
- 
-```
-ASDASD /hi HTTP/1.1
-Host: example.com
-
-
-```
-
-This is not possible in the normal ffuf because the net/http library only allows RFC-compliant HTTP methods.
-
-### Invalid url encoded character:
-
-`echo "%9f" | uff -c -u http://example.com/FUZZ -w -`
-
-```
-GET /%9f HTTP/1.1
-Host: example.com
-
-
-```
-
-Not supported in regular ffuf due to strict net/url checks.
-
 ### Invalid header:
 
 `echo "hi" | uff -c -u http://example.com/FUZZ -w - -H '   I AM AN INVALID: HEADER'`
