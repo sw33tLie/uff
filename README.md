@@ -10,15 +10,32 @@ To install `uff`, run the following command:
 go install github.com/sw33tLie/uff/v2@latest
 ```
 
-# Use cases
+## Features List
+
+- Real raw-request fuzzing (just like in Burp Suite or Caido - see the example below)
+- Absolute URI fuzzing (-opaque flag)
+- No HTTP Header canonization (your header won't be capitalized by default - this can bypass some WAFs)
+- Malformed HTTP headers are allowed (e.g.: headers starting with a space or without a colon)
+- `-no-content-length` flag to send a body in a request even without a `Content-Length` header.
+- `-request` flag actually sends the request you have in your file as it is, without reordering headers, missing malformed bits, etc.
+
+## Other changes
+- Default user agent changed to latest's Chrome version. NOTE: ffuf's default user agent is banned by many WAFs.
+- Default threads increased to 200.
+
+## Examples
 
 ### Absolute URI FUZZING:
 
 `echo hi | uff -c -u http://example.com -w - -opaque "http://127.0.0.1/FUZZ"`
  
-```
+Sent request:
+
+```http
 GET http://127.0.0.1/hi HTTP/1.1
-Host: example.com
+Host: n8wg13dfjmzknl3q6ehpd4b25tbrzhn6.oastify.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+Accept-Encoding: gzip
 
 
 ```
@@ -31,14 +48,16 @@ Absolute URI fuzzing is often valuable, but not supported in regular ffuf.
 
 ```http
 GET /hi HTTP/1.1
-Host: example.com
+Host: n8wg13dfjmzknl3q6ehpd4b25tbrzhn6.oastify.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
    I AM AN INVALID: HEADER
+Accept-Encoding: gzip
 
 
 ```
 
 This allows all sorts of malformed headers.
-You can even have a line without a colon!
+You can even have one without a colon!
 
 ### No header canonization
 
@@ -46,11 +65,10 @@ You can even have a line without a colon!
 
 ```http
 GET /hi HTTP/1.1
-Host: example.com
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36
+Host: n8wg13dfjmzknl3q6ehpd4b25tbrzhn6.oastify.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
 lowercase-header: yes
-Accept-Encoding: gzip, deflate, br
-Connection: keep-alive
+Accept-Encoding: gzip
 
 
 ```
@@ -105,12 +123,16 @@ By putting the whole raw request in the HTTP method, we achieve REAL raw-request
 
 Note you can use the {HOST} label inside the HTTP method to automatically replace it with the actual Host header of a request.
 
-## Other customizations
+### -request flag
 
-- Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
-- New flag: `-no-content-length` to send a body in a request even without a `Content-Length` header.
-- Default Threads increased to 200.
-- The `-request` flag actually now sends what you had in your file as it is, instead of doing weird header reordering and not really sending what you wanted anyways. Note: Due to this, now it's mandatory to specify the -u URL flag, unlike in regular ffuf.
+Just like in regular ffuf, you can use the `-request` flag to send a request from a file.
+The difference is that uff sends the reqeust as it is, without any surprise (such as headers being reordered), and without missing important parts that are not RFC compliant.
+
+```
+echo hi | go run *.go -c -request /tmp/req.txt -u "http://7w40pn1z76n4b5rauy591ozmtdzan0bp.oastify.com" -w - -debug-log asd
+```
+
+Note that unlike in regular ffuf, the `-u` URL flag is now mandatory, as you can't technically guess where to send an HTTP request just from the Host: header.
 
 ## Version
 
