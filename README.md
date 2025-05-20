@@ -1,6 +1,8 @@
 # uff - unleashed ffuf fork
 
-![resources/uff-logo.png](resources/uff-logo.png)
+<p align="center">
+  <img src="resources/uff-logo.png" alt="uff logo">
+</p>
 
 `uff` is a custom [ffuf](https://github.com/sw33tLie/uff) fork that relies on modified net/http and net/url libraries to go beyond what regular ffuf can do.
 
