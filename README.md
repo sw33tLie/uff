@@ -81,6 +81,27 @@ Lots of things suddently become possible :)
 
 Want to fuzz the HTTP version for some weird reason? Yeah, you can do that now.
 
+But WAIT, there's more!
+
+## Full raw request fuzzing with ffuf
+
+```
+echo "hi" | go run *.go  -u "http://pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com/" -w -  -c  -X $'GET /FUZZ HTTP/0.9\r\nHost: {HOST}\r\n look im just a raw request lol \r\n   so raw\r\n\r\n' --method-as-raw-request
+```
+
+Received request:
+
+```
+GET /hi HTTP/0.1
+Host: pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com
+ look im just a raw request lol 
+   so raw
+
+
+```
+
+Note this allows REAL control when fuzzing an http request, just like you can do with Burp Suite or Caido.
+
 ## Other customizations
 
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.

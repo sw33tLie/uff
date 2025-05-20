@@ -34,6 +34,8 @@ github.com/sw33tLie/http v0.0.0-20250520152302-b779f0fcbf2b h1:V0fT9HmPP5cXDUqf/
 github.com/sw33tLie/http v0.0.0-20250520152302-b779f0fcbf2b/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
 github.com/sw33tLie/http v0.0.0-20250520152933-2a033edeb73b h1:8NpIg6d8UdCWu9KcVgMZ3tMyNtOUEu261OLhU1RC0L0=
 github.com/sw33tLie/http v0.0.0-20250520152933-2a033edeb73b/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
+github.com/sw33tLie/http v0.0.0-20250520154406-5fad700f236c h1:9DvrkXUaqKmPEL86Um/rNSVzL+FMrAItlJy/reIlzcc=
+github.com/sw33tLie/http v0.0.0-20250520154406-5fad700f236c/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
 github.com/sw33tLie/neturl v0.0.0-20240612122703-b61e29214b2b h1:98hVSlUgELwdu7URul/SJ/Qf+HmmrmkHVmNtlOSebVw=
 github.com/sw33tLie/neturl v0.0.0-20240612122703-b61e29214b2b/go.mod h1:ZK0hhv1O01Oib81+GqP/8UUB4KIphmpiCwq45UEAKHA=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
