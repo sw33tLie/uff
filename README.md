@@ -59,7 +59,7 @@ Note how `lowercase-header` starts with a lowercase `l`.
 
 ### Abusing the HTTP method for total control of the first request line
 
-`echo "hi" | uff -u "http://1y0urh3t90pydzt4ws733i1gv71zppde.oastify.com/" -w - -H "x-lowercase: asd"  -c -d "asd"  -X "GET /FUZZ HTTP/1.0
+`echo "hi" | uff -u "http://1y0urh3t90pydzt4ws733i1gv71zppde.oastify.com/" -w - -X "GET /FUZZ HTTP/1.0
 x: x"`
 
 ```http
@@ -67,11 +67,9 @@ GET /hi HTTP/1.0
 x: x / HTTP/1.1
 Host: 1y0urh3t90pydzt4ws733i1gv71zppde.oastify.com
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
-Content-Length: 3
-x-lowercase: asd
 Accept-Encoding: gzip
 
-asd
+
 ```
 
 Note how the first line `GET /hi HTTP/1.0` is actually part of the HTTP method, but we can fuzz it!!!
