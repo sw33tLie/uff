@@ -2,6 +2,7 @@
 
 `uff` is a custom [ffuf](https://github.com/sw33tLie/uff) fork that relies on modified net/http and net/url libraries to go beyond what regular ffuf can do.
 
+It also tries to maintain full compatibility with regular ffuf, effectively acting as a drop-in replacement.
 ## Installation
 
 To install `uff`, run the following command:
