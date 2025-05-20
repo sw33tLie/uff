@@ -1,6 +1,6 @@
 # uff - unleashed ffuf fork
 
-Custom [ffuf](https://github.com/sw33tLie/uff) fork that relies on modified net/http and net/url libraries to avoid strict header and URL parsing.
+Custom [ffuf](https://github.com/sw33tLie/uff) fork that relies on modified net/http and net/url libraries to avoid strict header and URL parsing, with some additional customizations too.
 
 ## Installation
 
@@ -12,18 +12,18 @@ go install github.com/sw33tLie/uff@latest
 
 # Use cases
 
-This effectively makes it possible to send various malformed or unsupported requests, such as:
-
 ### Absolute URI FUZZING:
 
-`uff -c -u http://example.com -w vhosts.txt -opaque "http://FUZZ/"`
+`echo hi | uff -c -u http://example.com -w - -opaque "http://127.0.0.1/FUZZ"`
  
 ```
-GET http://anything-here/ HTTP/1.1
+GET http://127.0.0.1/hi HTTP/1.1
 Host: example.com
 
 
 ```
+
+Absolute URI fuzzing is often valuable, but not supported in regular ffuf.
 
 ### Arbitrary HTTP method:
 
@@ -38,7 +38,6 @@ Host: example.com
 
 This is not possible in the normal ffuf because the net/http library only allows RFC-compliant HTTP methods.
 
-
 ### Invalid url encoded character:
 
 `echo "%9f" | uff -c -u http://example.com/FUZZ -w -`
@@ -49,6 +48,8 @@ Host: example.com
 
 
 ```
+
+Not supported in regular ffuf due to strict net/url checks.
 
 ### Invalid header:
 
@@ -62,15 +63,18 @@ Host: example.com
 
 ```
 
+This allows all sorts of malformed headers.
+You can even have a line without a colon!
+
 ### No header canonization
 
-`echo hi | uff -c -u http://example.com/FUZZ -w - -H 'lowercase-header: weh'`
+`echo hi | uff -c -u http://example.com/FUZZ -w - -H 'lowercase-header: yes'`
 
 ```http
 GET /hi HTTP/1.1
 Host: example.com
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36
-lowercase-header: weh
+lowercase-header: yes
 Accept-Encoding: gzip, deflate, br
 Connection: keep-alive
 
