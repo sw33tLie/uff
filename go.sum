@@ -26,6 +26,14 @@ github.com/sw33tLie/http v0.0.0-20250520011747-f40e3407da22 h1:kRf2kdrxPIobZ2X0G
 github.com/sw33tLie/http v0.0.0-20250520011747-f40e3407da22/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
 github.com/sw33tLie/http v0.0.0-20250520012314-0fee72edd632 h1:o7Y6WhS48bR8m2iQhRIM4wbcbUwKIqvXWr3Uwuc/wLQ=
 github.com/sw33tLie/http v0.0.0-20250520012314-0fee72edd632/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
+github.com/sw33tLie/http v0.0.0-20250520151133-0fb7299ec3d0 h1:vr4MeZQdqNDKQWGlIX1jN4g2WoTzWWGbR2GbkXne/J4=
+github.com/sw33tLie/http v0.0.0-20250520151133-0fb7299ec3d0/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
+github.com/sw33tLie/http v0.0.0-20250520151948-9c17fd15e6d4 h1:bYm26EQt7wWKUz6G25yzk3scNgOTFNtSCSPVB/u9Jt4=
+github.com/sw33tLie/http v0.0.0-20250520151948-9c17fd15e6d4/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
+github.com/sw33tLie/http v0.0.0-20250520152302-b779f0fcbf2b h1:V0fT9HmPP5cXDUqf/WRaJcZ20Lo6bvlCBPCZ3Zfo7Gk=
+github.com/sw33tLie/http v0.0.0-20250520152302-b779f0fcbf2b/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
+github.com/sw33tLie/http v0.0.0-20250520152933-2a033edeb73b h1:8NpIg6d8UdCWu9KcVgMZ3tMyNtOUEu261OLhU1RC0L0=
+github.com/sw33tLie/http v0.0.0-20250520152933-2a033edeb73b/go.mod h1:4rf5K6dTe7Pw2uO8MhRjIs6ATCY9uaPlpudmgZwN+J0=
 github.com/sw33tLie/neturl v0.0.0-20240612122703-b61e29214b2b h1:98hVSlUgELwdu7URul/SJ/Qf+HmmrmkHVmNtlOSebVw=
 github.com/sw33tLie/neturl v0.0.0-20240612122703-b61e29214b2b/go.mod h1:ZK0hhv1O01Oib81+GqP/8UUB4KIphmpiCwq45UEAKHA=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=

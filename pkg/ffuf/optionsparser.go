@@ -57,6 +57,7 @@ type GeneralOptions struct {
 	ConfigFile                string   `toml:"-" json:"config_file"`
 	Delay                     string   `json:"delay"`
 	DoNotSendContentLength    bool     `json:"do_not_send_content_length"`
+	MethodAsRawRequest        bool     `json:"method_as_raw_request"`
 	Json                      bool     `json:"json"`
 	MaxTime                   int      `json:"maxtime"`
 	MaxTimeJob                int      `json:"maxtime_job"`
@@ -133,6 +134,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.General.Colors = false
 	c.General.Delay = ""
 	c.General.DoNotSendContentLength = false
+	c.General.MethodAsRawRequest = false
 	c.General.Json = false
 	c.General.MaxTime = 0
 	c.General.MaxTimeJob = 0
@@ -500,6 +502,8 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	conf.IgnoreWordlistComments = parseOpts.Input.IgnoreWordlistComments
 	conf.DirSearchCompat = parseOpts.Input.DirSearchCompat
 	conf.DoNotSendContentLength = parseOpts.General.DoNotSendContentLength
+	conf.MethodAsRawRequest = parseOpts.General.MethodAsRawRequest
+
 	conf.Colors = parseOpts.General.Colors
 	conf.InputNum = parseOpts.Input.InputNum
 

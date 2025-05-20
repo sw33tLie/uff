@@ -139,6 +139,10 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 		httpreq.Host = req.Headers["Host"]
 	}
 
+	if r.config.MethodAsRawRequest {
+		http.EnableMethodOnlyRequest()
+	}
+
 	req.Host = httpreq.Host
 	httpreq = httpreq.WithContext(httptrace.WithClientTrace(r.config.Context, trace))
 

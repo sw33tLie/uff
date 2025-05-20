@@ -22,6 +22,7 @@ type Config struct {
 	Delay                     optRange              `json:"delay"`
 	DirSearchCompat           bool                  `json:"dirsearch_compatibility"`
 	DoNotSendContentLength    bool                  `json:"do_not_send_content_length"`
+	MethodAsRawRequest        bool                  `json:"method_as_raw_request"`
 	Encoders                  []string              `json:"encoders"`
 	Extensions                []string              `json:"extensions"`
 	FilterMode                string                `json:"fmode"`
@@ -93,6 +94,7 @@ func NewConfig(ctx context.Context, cancel context.CancelFunc) Config {
 	conf.Delay = optRange{0, 0, false, false}
 	conf.DirSearchCompat = false
 	conf.DoNotSendContentLength = false
+	conf.MethodAsRawRequest = false
 	conf.Encoders = make([]string, 0)
 	conf.Extensions = make([]string, 0)
 	conf.FilterMode = "or"

@@ -15,7 +15,7 @@ require (
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/sw33tLie/http v0.0.0-20250520012314-0fee72edd632 // indirect
+	github.com/sw33tLie/http v0.0.0-20250520152933-2a033edeb73b // indirect
 	github.com/sw33tLie/neturl v0.0.0-20240612122703-b61e29214b2b // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
