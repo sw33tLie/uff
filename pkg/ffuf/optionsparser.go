@@ -622,7 +622,7 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 	http.EnableMethodOnlyRequest()
 
-	// conf.RequestFile = parseOpts.Input.Request
+	conf.RequestFile = parseOpts.Input.Request
 	conf.RequestProto = parseOpts.Input.RequestProto
 	file, err := os.Open(parseOpts.Input.Request)
 	if err != nil {
@@ -640,8 +640,15 @@ func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 		return fmt.Errorf("empty request file")
 	}
 
+	// Check if the content has \n without \r and convert if needed
+	contentStr := string(content)
+	if strings.Contains(contentStr, "\n") && !strings.Contains(contentStr, "\r\n") {
+		fmt.Println("Note: Converting LF (\\n) to CRLF (\\r\\n) in request file for proper HTTP formatting")
+		contentStr = strings.ReplaceAll(contentStr, "\n", "\r\n")
+	}
+
 	// Put the whole raw request in the method field
-	conf.Method = string(content)
+	conf.Method = contentStr
 
 	return nil
 }
