@@ -2,7 +2,7 @@ package scraper
 
 import (
 	"fmt"
-	"github.com/sw33tLie/uff/pkg/ffuf"
+	"github.com/ffuf/ffuf/v2/pkg/ffuf"
 	"strings"
 )
 

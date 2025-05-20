@@ -5,6 +5,7 @@ import (
 )
 
 type Config struct {
+	AuditLog                  string                `json:"auditlog"`
 	AutoCalibration           bool                  `json:"autocalibration"`
 	AutoCalibrationKeyword    string                `json:"autocalibration_keyword"`
 	AutoCalibrationPerHost    bool                  `json:"autocalibration_perhost"`
@@ -20,6 +21,7 @@ type Config struct {
 	Debuglog                  string                `json:"debuglog"`
 	Delay                     optRange              `json:"delay"`
 	DirSearchCompat           bool                  `json:"dirsearch_compatibility"`
+	DoNotSendContentLength    bool                  `json:"do_not_send_content_length"`
 	Encoders                  []string              `json:"encoders"`
 	Extensions                []string              `json:"extensions"`
 	FilterMode                string                `json:"fmode"`
@@ -90,6 +92,7 @@ func NewConfig(ctx context.Context, cancel context.CancelFunc) Config {
 	conf.Debuglog = ""
 	conf.Delay = optRange{0, 0, false, false}
 	conf.DirSearchCompat = false
+	conf.DoNotSendContentLength = false
 	conf.Encoders = make([]string, 0)
 	conf.Extensions = make([]string, 0)
 	conf.FilterMode = "or"

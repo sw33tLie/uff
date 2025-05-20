@@ -56,6 +56,7 @@ type GeneralOptions struct {
 	Colors                    bool     `json:"colors"`
 	ConfigFile                string   `toml:"-" json:"config_file"`
 	Delay                     string   `json:"delay"`
+	DoNotSendContentLength    bool     `json:"do_not_send_content_length"`
 	Json                      bool     `json:"json"`
 	MaxTime                   int      `json:"maxtime"`
 	MaxTimeJob                int      `json:"maxtime_job"`
@@ -88,6 +89,7 @@ type InputOptions struct {
 }
 
 type OutputOptions struct {
+	AuditLog            string `json:"audit_log"`
 	DebugLog            string `json:"debug_log"`
 	OutputDirectory     string `json:"output_directory"`
 	OutputFile          string `json:"output_file"`
@@ -130,6 +132,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.General.AutoCalibrationStrategies = []string{"basic"}
 	c.General.Colors = false
 	c.General.Delay = ""
+	c.General.DoNotSendContentLength = false
 	c.General.Json = false
 	c.General.MaxTime = 0
 	c.General.MaxTimeJob = 0
@@ -175,6 +178,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.Matcher.Status = "200-299,301,302,307,401,403,405,500"
 	c.Matcher.Time = ""
 	c.Matcher.Words = ""
+	c.Output.AuditLog = ""
 	c.Output.DebugLog = ""
 	c.Output.OutputDirectory = ""
 	c.Output.OutputFile = ""
@@ -384,10 +388,11 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	for _, v := range parseOpts.HTTP.Headers {
 		hs := strings.SplitN(v, ":", 2)
 		if len(hs) == 2 {
-			// SWEETFREEDOM, removed all trimming and canonization
-			conf.Headers[strings.TrimSpace(hs[0])] = strings.TrimSpace(hs[1])
+			fmt.Println(hs[0], hs[1])
+			// uff change: removed all trimming and canonization
+			conf.Headers[hs[0]] = hs[1]
 		} else {
-			errs.Add(fmt.Errorf("Header defined by -H needs to have a value. \":\" should be used as a separator"))
+			conf.Headers[v] = "NOCOLON" // hardcoded label in github.com/sw33tLie/http
 		}
 	}
 
@@ -495,10 +500,12 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	// Common stuff
 	conf.IgnoreWordlistComments = parseOpts.Input.IgnoreWordlistComments
 	conf.DirSearchCompat = parseOpts.Input.DirSearchCompat
+	conf.DoNotSendContentLength = parseOpts.General.DoNotSendContentLength
 	conf.Colors = parseOpts.General.Colors
 	conf.InputNum = parseOpts.Input.InputNum
 
 	conf.InputShell = parseOpts.Input.InputShell
+	conf.AuditLog = parseOpts.Output.AuditLog
 	conf.OutputFile = parseOpts.Output.OutputFile
 	conf.OutputDirectory = parseOpts.Output.OutputDirectory
 	conf.OutputSkipEmptyFile = parseOpts.Output.OutputSkipEmptyFile
@@ -554,15 +561,16 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 		conf.AutoCalibration = true
 	}
 
-	// Handle copy as curl situation where POST method is implied by --data flag. If method is set to anything but GET, NOOP
-	// SWEETFREEDOM this is still a stupid idea
-	/*if len(conf.Data) > 0 &&
+	// OLD: Handle copy as curl situation where POST method is implied by --data flag. If method is set to anything but GET, NOOP
+	if len(conf.Data) > 0 &&
 		conf.Method == "GET" &&
 		//don't modify the method automatically if a request file is being used as input
 		len(parseOpts.Input.Request) == 0 {
 
-		conf.Method = "POST"
-	}*/
+		fmt.Println("uff warning: sending body with GET request. This may or may not be what you want. Specify -X POST if not")
+		// uff change
+		//conf.Method = "POST"
+	}
 
 	conf.CommandLine = strings.Join(os.Args, " ")
 
@@ -570,14 +578,14 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	for _, provider := range conf.InputProviders {
 		if provider.Template != "" {
 			if !templatePresent(provider.Template, &conf) {
-				errmsg := fmt.Sprintf("Template %s defined, but not found in pairs in headers, method, URL, Opaque, or POST data.", provider.Template)
+				errmsg := fmt.Sprintf("Template %s defined, but not found in pairs in headers, method, URL, Opaque or POST data.", provider.Template)
 				errs.Add(fmt.Errorf(errmsg))
 			} else {
 				newInputProviders = append(newInputProviders, provider)
 			}
 		} else {
 			if !keywordPresent(provider.Keyword, &conf) {
-				errmsg := fmt.Sprintf("Keyword %s defined, but not found in headers, method, URL, Opaque, or POST data.", provider.Keyword)
+				errmsg := fmt.Sprintf("Keyword %s defined, but not found in headers, method, URL, Opaque or POST data.", provider.Keyword)
 				_, _ = fmt.Fprintf(os.Stderr, "%s\n", fmt.Errorf(errmsg))
 			} else {
 				newInputProviders = append(newInputProviders, provider)

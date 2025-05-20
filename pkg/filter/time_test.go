@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sw33tLie/uff/pkg/ffuf"
+	"github.com/ffuf/ffuf/v2/pkg/ffuf"
 )
 
 func TestNewTimeFilter(t *testing.T) {
@@ -43,8 +43,8 @@ func TestTimeFiltering(t *testing.T) {
 		{2, false},
 	} {
 		resp := ffuf.Response{
-			Data: []byte("dahhhhhtaaaaa"),
-			Time: time.Duration(test.input * int64(time.Millisecond)),
+			Data:     []byte("dahhhhhtaaaaa"),
+			Duration: time.Duration(test.input * int64(time.Millisecond)),
 		}
 		filterReturn, _ := f.Filter(&resp)
 		if filterReturn != test.output {

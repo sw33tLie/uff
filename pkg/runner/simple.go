@@ -7,25 +7,26 @@ import (
 	"crypto/tls"
 	"io"
 	"net"
+
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
 
-	url "github.com/sw33tLie/neturl"
+	"github.com/sw33tLie/http/httptrace"
+	"github.com/sw33tLie/http/httputil"
 
-	http "github.com/sw33tLie/oohttp"
+	http "github.com/sw33tLie/http"
 
-	"github.com/sw33tLie/oohttp/httptrace"
-	"github.com/sw33tLie/oohttp/httputil"
-
-	"github.com/sw33tLie/uff/pkg/ffuf"
+	"github.com/ffuf/ffuf/v2/pkg/ffuf"
 
 	"github.com/andybalholm/brotli"
 )
 
 // Download results < 5MB
 const MAX_DOWNLOAD_SIZE = 5242880
-const DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+
+const USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
 
 type SimpleRunner struct {
 	config *ffuf.Config
@@ -130,7 +131,7 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 
 	// set default User-Agent header if not present
 	if _, ok := req.Headers["User-Agent"]; !ok {
-		req.Headers["User-Agent"] = DEFAULT_USER_AGENT
+		req.Headers["User-Agent"] = USER_AGENT
 	}
 
 	// Handle Go http.Request special cases
@@ -150,18 +151,24 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	}
 
 	for k, v := range req.Headers {
-		// Ensure no extra spaces in User-Agent header
 		httpreq.Header.Set(k, v)
 	}
 
-	if len(r.config.OutputDirectory) > 0 {
+	if len(r.config.OutputDirectory) > 0 || len(r.config.AuditLog) > 0 {
 		rawreq, _ = httputil.DumpRequestOut(httpreq, true)
+		req.Raw = string(rawreq)
+	}
+
+	if r.config.DoNotSendContentLength {
+		http.DoNotSendContentLength()
 	}
 
 	httpresp, err := r.client.Do(httpreq)
 	if err != nil {
 		return ffuf.Response{}, err
 	}
+
+	req.Timestamp = start
 
 	resp := ffuf.NewResponse(httpresp, req)
 	defer httpresp.Body.Close()
@@ -176,7 +183,7 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 		}
 	}
 
-	if len(r.config.OutputDirectory) > 0 {
+	if len(r.config.OutputDirectory) > 0 || len(r.config.AuditLog) > 0 {
 		rawresp, _ := httputil.DumpResponse(httpresp, true)
 		resp.Request.Raw = string(rawreq)
 		resp.Raw = string(rawresp)
@@ -213,7 +220,8 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	linesSize := len(strings.Split(string(resp.Data), "\n"))
 	resp.ContentWords = int64(wordsSize)
 	resp.ContentLines = int64(linesSize)
-	resp.Time = firstByteTime
+	resp.Duration = firstByteTime
+	resp.Timestamp = start.Add(firstByteTime)
 
 	return resp, nil
 }
@@ -229,7 +237,7 @@ func (r *SimpleRunner) Dump(req *ffuf.Request) ([]byte, error) {
 
 	// set default User-Agent header if not present
 	if _, ok := req.Headers["User-Agent"]; !ok {
-		req.Headers["User-Agent"] = DEFAULT_USER_AGENT
+		req.Headers["User-Agent"] = USER_AGENT
 	}
 
 	// Handle Go http.Request special cases

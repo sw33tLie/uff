@@ -5,7 +5,7 @@ import (
 
 	url "github.com/sw33tLie/neturl"
 
-	http "github.com/sw33tLie/oohttp"
+	http "github.com/sw33tLie/http"
 )
 
 // Response struct holds the meaningful data returned from request and is meant for passing to filters
@@ -22,7 +22,8 @@ type Response struct {
 	Raw           string
 	ResultFile    string
 	ScraperData   map[string][]string
-	Time          time.Duration
+	Duration      time.Duration
+	Timestamp     time.Time
 }
 
 // GetRedirectLocation returns the redirect location for a 3xx redirect HTTP response

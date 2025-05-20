@@ -13,6 +13,7 @@ import (
 
 // Job ties together Config, Runner, Input and Output
 type Job struct {
+	AuditLogger          AuditLogger
 	Config               *Config
 	ErrorMutex           sync.Mutex
 	Input                InputProvider
@@ -175,7 +176,6 @@ func (j *Job) prepareQueueJob() {
 	//Find all keywords present in new queued job
 	kws := j.Input.Keywords()
 	found_kws := make([]string, 0)
-
 	for _, k := range kws {
 		if RequestContainsKeyword(j.queuejobs[j.queuepos].req, k) {
 			found_kws = append(found_kws, k)
@@ -261,7 +261,6 @@ func (j *Job) startExecution() {
 		nextInput := j.Input.Value()
 		nextPosition := j.Input.Position()
 		// Add FFUFHASH and its value
-
 		nextInput["FFUFHASH"] = j.ffufHash(nextPosition)
 
 		wg.Add(1)
@@ -398,8 +397,9 @@ func (j *Job) ffufHash(pos int) []byte {
 func (j *Job) runTask(input map[string][]byte, position int, retried bool) {
 	basereq := j.queuejobs[j.queuepos-1].req
 	req, err := j.Runner.Prepare(input, &basereq)
-	req.Position = position
+	req.Timestamp = time.Now()
 
+	req.Position = position
 	if err != nil {
 		j.Output.Error(fmt.Sprintf("Encountered an error while preparing request: %s\n", err))
 		j.incError()
@@ -408,6 +408,18 @@ func (j *Job) runTask(input map[string][]byte, position int, retried bool) {
 	}
 
 	resp, err := j.Runner.Execute(&req)
+	if err != nil {
+		req.Error = err.Error()
+	}
+
+	// Audit the request after sending to the runner so we get any changes
+	if j.AuditLogger != nil {
+		e := j.AuditLogger.Write(&req)
+		if e != nil {
+			j.Output.Error(fmt.Sprintf("Encountered error while writing request audit log: %s\n", e))
+		}
+	}
+
 	if err != nil {
 		if retried {
 			j.incError()
@@ -439,6 +451,15 @@ func (j *Job) runTask(input map[string][]byte, position int, retried bool) {
 		}
 		return
 	}
+
+	// audit the response after the error handling
+	if j.AuditLogger != nil {
+		err = j.AuditLogger.Write(&resp)
+		if err != nil {
+			j.Output.Error(fmt.Sprintf("Encountered error while writing response audit log: %s\n", err))
+		}
+	}
+
 	if j.SpuriousErrorCounter > 0 {
 		j.resetSpuriousErrors()
 	}

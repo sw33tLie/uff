@@ -26,7 +26,6 @@ func (c *Config) ToOptions() ConfigOptions {
 	o.HTTP.SNI = c.SNI
 	o.HTTP.Timeout = c.Timeout
 	o.HTTP.URL = c.Url
-	o.HTTP.Opaque = c.Opaque
 	o.HTTP.Http2 = c.Http2
 
 	o.General.AutoCalibration = c.AutoCalibration
@@ -59,7 +58,6 @@ func (c *Config) ToOptions() ConfigOptions {
 	o.General.Threads = c.Threads
 	o.General.Verbose = c.Verbose
 
-	o.Input.DirSearchCompat = c.DirSearchCompat
 	o.Input.Extensions = strings.Join(c.Extensions, ",")
 	o.Input.IgnoreWordlistComments = c.IgnoreWordlistComments
 	o.Input.InputMode = c.InputMode
@@ -75,6 +73,7 @@ func (c *Config) ToOptions() ConfigOptions {
 	o.Input.RequestProto = c.RequestProto
 	o.Input.Wordlists = c.Wordlists
 
+	o.Output.AuditLog = c.AuditLog
 	o.Output.DebugLog = c.Debuglog
 	o.Output.OutputDirectory = c.OutputDirectory
 	o.Output.OutputFile = c.OutputFile

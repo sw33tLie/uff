@@ -2,19 +2,22 @@ package ffuf
 
 import (
 	"strings"
+	"time"
 )
 
 // Request holds the meaningful data that is passed for runner for making the query
 type Request struct {
-	Method   string
-	Host     string
-	Url      string
-	Opaque   string
-	Headers  map[string]string
-	Data     []byte
-	Input    map[string][]byte
-	Position int
-	Raw      string
+	Method    string
+	Host      string
+	Url       string
+	Opaque    string
+	Headers   map[string]string
+	Data      []byte
+	Input     map[string][]byte
+	Position  int
+	Raw       string
+	Error     string
+	Timestamp time.Time
 }
 
 func NewRequest(conf *Config) Request {
@@ -96,7 +99,6 @@ func SniperRequests(basereq *Request, template string) []Request {
 			for i := 0; i < len(tokens); i = i + 2 {
 				newreq := CopyRequest(basereq)
 				newreq.Url = injectKeyword(basereq.Url, keyword, tokens[i], tokens[i+1])
-
 				scrubTemplates(&newreq, template)
 				reqs = append(reqs, newreq)
 			}

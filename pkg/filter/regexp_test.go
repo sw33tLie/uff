@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sw33tLie/uff/pkg/ffuf"
+	"github.com/ffuf/ffuf/v2/pkg/ffuf"
 )
 
 func TestNewRegexpFilter(t *testing.T) {

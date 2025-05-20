@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sw33tLie/uff/pkg/ffuf"
-	"github.com/sw33tLie/uff/pkg/filter"
-	"github.com/sw33tLie/uff/pkg/input"
-	"github.com/sw33tLie/uff/pkg/interactive"
-	"github.com/sw33tLie/uff/pkg/output"
-	"github.com/sw33tLie/uff/pkg/runner"
-	"github.com/sw33tLie/uff/pkg/scraper"
+	"github.com/ffuf/ffuf/v2/pkg/ffuf"
+	"github.com/ffuf/ffuf/v2/pkg/filter"
+	"github.com/ffuf/ffuf/v2/pkg/input"
+	"github.com/ffuf/ffuf/v2/pkg/interactive"
+	"github.com/ffuf/ffuf/v2/pkg/output"
+	"github.com/ffuf/ffuf/v2/pkg/runner"
+	"github.com/ffuf/ffuf/v2/pkg/scraper"
 )
 
 type multiStringFlag []string
@@ -68,6 +68,7 @@ func ParseFlags(opts *ffuf.ConfigOptions) *ffuf.ConfigOptions {
 	flag.BoolVar(&opts.General.AutoCalibration, "ac", opts.General.AutoCalibration, "Automatically calibrate filtering options")
 	flag.BoolVar(&opts.General.AutoCalibrationPerHost, "ach", opts.General.AutoCalibration, "Per host autocalibration")
 	flag.BoolVar(&opts.General.Colors, "c", opts.General.Colors, "Colorize output.")
+	flag.BoolVar(&opts.General.DoNotSendContentLength, "no-content-length", opts.General.DoNotSendContentLength, "Do not send Content-Length header even when a body is provided")
 	flag.BoolVar(&opts.General.Json, "json", opts.General.Json, "JSON output, printing newline-delimited JSON records")
 	flag.BoolVar(&opts.General.Noninteractive, "noninteractive", opts.General.Noninteractive, "Disable the interactive console functionality")
 	flag.BoolVar(&opts.General.Quiet, "s", opts.General.Quiet, "Do not print additional information (silent mode)")
@@ -128,6 +129,7 @@ func ParseFlags(opts *ffuf.ConfigOptions) *ffuf.ConfigOptions {
 	flag.StringVar(&opts.Matcher.Status, "mc", opts.Matcher.Status, "Match HTTP status codes, or \"all\" for everything.")
 	flag.StringVar(&opts.Matcher.Time, "mt", opts.Matcher.Time, "Match how many milliseconds to the first response byte, either greater or less than. EG: >100 or <100")
 	flag.StringVar(&opts.Matcher.Words, "mw", opts.Matcher.Words, "Match amount of words in response")
+	flag.StringVar(&opts.Output.AuditLog, "audit-log", opts.Output.AuditLog, "Write audit log containing all requests, responses and config")
 	flag.StringVar(&opts.Output.DebugLog, "debug-log", opts.Output.DebugLog, "Write all of the internal logging to the specified file.")
 	flag.StringVar(&opts.Output.OutputDirectory, "od", opts.Output.OutputDirectory, "Directory path to store matched results to.")
 	flag.StringVar(&opts.Output.OutputFile, "o", opts.Output.OutputFile, "Write output to file")
@@ -242,6 +244,10 @@ func main() {
 	}
 
 	job, err := prepareJob(conf)
+
+	if job.AuditLogger != nil {
+		defer job.AuditLogger.Close()
+	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Encountered error(s): %s\n", err)
 		Usage()
@@ -281,6 +287,19 @@ func prepareJob(conf *ffuf.Config) (*ffuf.Job, error) {
 	}
 	// We only have stdout outputprovider right now
 	job.Output = output.NewOutputProviderByName("stdout", conf)
+
+	// Initialize the audit logger if specified
+	if len(conf.AuditLog) > 0 {
+		job.AuditLogger, err = output.NewAuditLogger(conf.AuditLog)
+		if err != nil {
+			errs.Add(err)
+		} else {
+			err = job.AuditLogger.Write(conf)
+			if err != nil {
+				errs.Add(err)
+			}
+		}
+	}
 
 	// Initialize scraper
 	newscraper, scraper_err := scraper.FromDir(ffuf.SCRAPERDIR, conf.Scrapers)
