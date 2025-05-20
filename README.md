@@ -59,8 +59,10 @@ Note how `lowercase-header` starts with a lowercase `l`.
 
 ### Abusing the HTTP method for total control of the first request line
 
-`echo "hi" | uff -u "http://1y0urh3t90pydzt4ws733i1gv71zppde.oastify.com/" -w - -X "GET /FUZZ HTTP/1.0
-x: x"`
+```
+echo "hi" | uff -u "http://1y0urh3t90pydzt4ws733i1gv71zppde.oastify.com/" -w - -X "GET /FUZZ HTTP/1.0
+x: x"
+```
 
 ```http
 GET /hi HTTP/1.0
