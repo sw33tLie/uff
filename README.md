@@ -86,7 +86,7 @@ But WAIT, there's more!
 ## Full raw request fuzzing with ffuf
 
 ```
-echo "hi" | go run *.go  -u "http://pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com/" --method-as-raw-request -w -  -c  -X $'GET /FUZZ HTTP/0.9\r\nHost: {HOST}\r\n look im just a raw request lol \r\n   so raw\r\n\r\n' 
+echo "hi" | uff -u "http://pb4i45ghmo2mqn6s9gkrg6e48veo2eq3.oastify.com/" --method-as-raw-request -w -  -c  -X $'GET /FUZZ HTTP/0.9\r\nHost: {HOST}\r\n look im just a raw request lol \r\n   so raw\r\n\r\n' 
 ```
 
 Received request:
