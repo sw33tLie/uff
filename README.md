@@ -79,6 +79,8 @@ In this example we're sending an `HTTP/1.0` request, something you can't do with
 
 Lots of things suddently become possible :)
 
+Want to fuzz the HTTP version for some weird reason? That's possible too
+
 ## Other customizations
 
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
