@@ -27,7 +27,7 @@ Host: example.com
 
 ### Arbitrary HTTP method:
 
-`uff -c -u http://example.com/FUZZ -w wordlist.txt -X ASDASD`
+`echo hi | uff -c -u http://example.com/FUZZ -w - -X ASDASD`
  
 ```
 ASDASD /hi HTTP/1.1
@@ -52,10 +52,10 @@ Host: example.com
 
 ### Invalid header:
 
-`echo "%9f" | uff -c -u http://example.com/FUZZ -w - -H '   I AM AN INVALID: HEADER'`
+`echo "hi" | uff -c -u http://example.com/FUZZ -w - -H '   I AM AN INVALID: HEADER'`
 
 ```http
-GET /%9f HTTP/1.1
+GET /hi HTTP/1.1
 Host: example.com
    I AM AN INVALID: HEADER
 
@@ -64,7 +64,7 @@ Host: example.com
 
 ### No header canonization
 
-`uff -c -u http://example.com/FUZZ -w wordlist.txt -H 'lowercase-header: weh'`
+`echo hi | uff -c -u http://example.com/FUZZ -w - -H 'lowercase-header: weh'`
 
 ```http
 GET /hi HTTP/1.1
@@ -82,10 +82,7 @@ Note how `lowercase-header` starts with a lowercase `l`.
 ## Other customizations
 
 - Legit user agent instead of ffuf's default `Fuzz Faster U Fool` one.
-
-# Caveats
-
-As of now, since the automatic content-length header calculation code was removed from net/http, you need to set your own Content-Length header if you're using the -d flag for POST data.
+- New flag: `-no-content-length` to send a body in a request even without a `Content-Length` header.
 
 ## Version
 
