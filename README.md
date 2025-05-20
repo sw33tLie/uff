@@ -79,7 +79,7 @@ In this example we're sending an `HTTP/1.0` request, something you can't do with
 
 Lots of things suddently become possible :)
 
-Want to fuzz the HTTP version for some weird reason? That's possible too
+Want to fuzz the HTTP version for some weird reason? Yeah, you can do that now.
 
 ## Other customizations
 
