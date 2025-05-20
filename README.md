@@ -24,6 +24,7 @@ go install github.com/sw33tLie/uff/v2@latest
 - Malformed HTTP headers are allowed (e.g.: headers starting with a space or without a colon)
 - `-no-content-length` flag to send a body in a request even without a `Content-Length` header.
 - `-request` flag actually sends the request you have in your file as it is, without reordering headers, missing malformed bits, etc.
+- `-request-keepalive` flag to set `Connection: keep-alive` in the -request file and fuzz faster.
 
 ## Other changes
 - Default user agent changed to latest's Chrome version. NOTE: ffuf's default user agent is banned by many WAFs.

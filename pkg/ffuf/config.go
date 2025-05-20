@@ -56,6 +56,7 @@ type Config struct {
 	ReplayProxyURL            string                `json:"replayproxyurl"`
 	RequestFile               string                `json:"requestfile"`
 	RequestProto              string                `json:"requestproto"`
+	RequestKeepalive          bool                  `json:"requestkeepalive"`
 	ScraperFile               string                `json:"scraperfile"`
 	Scrapers                  string                `json:"scrapers"`
 	SNI                       string                `json:"sni"`
@@ -121,6 +122,7 @@ func NewConfig(ctx context.Context, cancel context.CancelFunc) Config {
 	conf.RecursionStrategy = "default"
 	conf.RequestFile = ""
 	conf.RequestProto = "https"
+	conf.RequestKeepalive = false
 	conf.SNI = ""
 	conf.ScraperFile = ""
 	conf.Scrapers = "all"

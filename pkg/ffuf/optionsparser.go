@@ -85,6 +85,7 @@ type InputOptions struct {
 	Inputcommands          []string `json:"input_commands"`
 	Request                string   `json:"request_file"`
 	RequestProto           string   `json:"request_proto"`
+	RequestKeepalive       bool     `json:"request_keepalive"`
 	Wordlists              []string `json:"wordlists"`
 }
 
@@ -172,6 +173,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.Input.InputNum = 100
 	c.Input.Request = ""
 	c.Input.RequestProto = "https"
+	c.Input.RequestKeepalive = false
 	c.Matcher.Mode = "or"
 	c.Matcher.Lines = ""
 	c.Matcher.Regexp = ""
@@ -624,6 +626,7 @@ func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 
 	conf.RequestFile = parseOpts.Input.Request
 	conf.RequestProto = parseOpts.Input.RequestProto
+	conf.RequestKeepalive = parseOpts.Input.RequestKeepalive
 	file, err := os.Open(parseOpts.Input.Request)
 	if err != nil {
 		return fmt.Errorf("could not open request file: %s", err)
@@ -645,6 +648,16 @@ func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 	if strings.Contains(contentStr, "\n") && !strings.Contains(contentStr, "\r\n") {
 		fmt.Println("Note: Converting LF (\\n) to CRLF (\\r\\n) in request file for proper HTTP formatting")
 		contentStr = strings.ReplaceAll(contentStr, "\n", "\r\n")
+	}
+
+	if conf.RequestKeepalive {
+		contentStr = strings.ReplaceAll(contentStr, "Connection: close", "Connection: keep-alive")
+		contentStr = strings.ReplaceAll(contentStr, "Connection:close", "Connection: keep-alive")
+	} else {
+		if strings.Contains(contentStr, "Connection: close") {
+			fmt.Println("Note: Your request has Connection: close. Consider using -request-keepalive to set Connection: keep-alive and fuzz faster")
+		}
+
 	}
 
 	// Put the whole raw request in the method field

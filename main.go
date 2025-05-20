@@ -123,6 +123,7 @@ func ParseFlags(opts *ffuf.ConfigOptions) *ffuf.ConfigOptions {
 	flag.StringVar(&opts.Input.InputShell, "input-shell", opts.Input.InputShell, "Shell to be used for running command")
 	flag.StringVar(&opts.Input.Request, "request", opts.Input.Request, "File containing the raw http request")
 	flag.StringVar(&opts.Input.RequestProto, "request-proto", opts.Input.RequestProto, "Protocol to use along with raw request")
+	flag.BoolVar(&opts.Input.RequestKeepalive, "request-keepalive", opts.Input.RequestKeepalive, "Overwrite Connection: header and set it to keep-alive in request file")
 	flag.StringVar(&opts.Matcher.Mode, "mmode", opts.Matcher.Mode, "Matcher set operator. Either of: and, or")
 	flag.StringVar(&opts.Matcher.Lines, "ml", opts.Matcher.Lines, "Match amount of lines in response")
 	flag.StringVar(&opts.Matcher.Regexp, "mr", opts.Matcher.Regexp, "Match regexp")
