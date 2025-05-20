@@ -7,7 +7,7 @@ Custom [ffuf](https://github.com/sw33tLie/uff) fork that relies on modified net/
 To install `uff`, run the following command:
 
 ```bash
-go install github.com/sw33tLie/uff/v2@@latest
+go install github.com/sw33tLie/uff/v2@latest
 ```
 
 # Use cases
