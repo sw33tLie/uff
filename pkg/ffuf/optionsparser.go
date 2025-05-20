@@ -388,7 +388,6 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	for _, v := range parseOpts.HTTP.Headers {
 		hs := strings.SplitN(v, ":", 2)
 		if len(hs) == 2 {
-			fmt.Println(hs[0], hs[1])
 			// uff change: removed all trimming and canonization
 			conf.Headers[hs[0]] = hs[1]
 		} else {
