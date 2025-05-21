@@ -571,7 +571,7 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 		//don't modify the method automatically if a request file is being used as input
 		len(parseOpts.Input.Request) == 0 {
 
-		fmt.Println("uff warning: sending body with GET request. This may or may not be what you want. Specify -X POST if not")
+		fmt.Println("[uff warning] sending body with GET request. This may or may not be what you want. Specify -X POST if not")
 		// uff change
 		//conf.Method = "POST"
 	}
@@ -646,7 +646,7 @@ func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 	// Check if the content has \n without \r and convert if needed
 	contentStr := string(content)
 	if strings.Contains(contentStr, "\n") && !strings.Contains(contentStr, "\r\n") {
-		fmt.Println("Note: Converting LF (\\n) to CRLF (\\r\\n) in request file for proper HTTP formatting")
+		fmt.Println("[uff warning] Converting LF (\\n) to CRLF (\\r\\n) in request file for proper HTTP formatting")
 		contentStr = strings.ReplaceAll(contentStr, "\n", "\r\n")
 	}
 
@@ -655,7 +655,7 @@ func parseRawRequest(parseOpts *ConfigOptions, conf *Config) error {
 		contentStr = strings.ReplaceAll(contentStr, "Connection:close", "Connection: keep-alive")
 	} else {
 		if strings.Contains(contentStr, "Connection: close") {
-			fmt.Println("Note: Your request has Connection: close. Consider using -request-keepalive to set Connection: keep-alive and fuzz faster")
+			fmt.Println("[uff warning] Your request has Connection: close. Consider using -request-keepalive to set Connection: keep-alive and fuzz faster")
 		}
 
 	}
