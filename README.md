@@ -16,6 +16,8 @@ To install `uff`, run the following command:
 go install github.com/sw33tLie/uff/v2@latest
 ```
 
+⚠️ If you encounter an error, please update your Go installation to the latest version. ⚠️
+
 ## Features List
 
 - Real raw-request fuzzing (just like in Burp Suite or Caido - see the example below)
